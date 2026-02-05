@@ -1,5 +1,5 @@
 import { watch } from 'chokidar';
-import { spawn, type ChildProcess } from 'child_process';
+import { fork, spawn, type ChildProcess } from 'child_process';
 import chalk from 'chalk';
 import { resolve } from 'path';
 
@@ -14,7 +14,7 @@ export async function runPlayground(file: string): Promise<void> {
   const killProcess = () => {
     if (currentProcess && !currentProcess.killed) {
       // Use tree-kill pattern for Windows compatibility
-      if (process.platform === 'win32') {
+      if (process.platform === 'win32' && currentProcess.pid) {
         spawn('taskkill', ['/pid', String(currentProcess.pid), '/f', '/t'], {
           stdio: 'ignore',
           shell: true
@@ -33,10 +33,10 @@ export async function runPlayground(file: string): Promise<void> {
     console.log(chalk.yellow(`[${new Date().toLocaleTimeString()}] Running...\n`));
     console.log(chalk.gray('─'.repeat(50)));
 
-    // Use spawn with arguments array to prevent command injection
-    currentProcess = spawn('npx', ['tsx', filePath], {
-      stdio: ['inherit', 'pipe', 'pipe'],
-      shell: true, // Needed for npx on Windows
+    // Use fork with tsx loader - secure and cross-platform
+    currentProcess = fork(filePath, [], {
+      stdio: ['inherit', 'pipe', 'pipe', 'ipc'],
+      execArgv: ['--import', 'tsx'],
       cwd: process.cwd()
     });
 
@@ -45,8 +45,12 @@ export async function runPlayground(file: string): Promise<void> {
     });
 
     currentProcess.stderr?.on('data', (data) => {
-      hasError = true;
-      process.stderr.write(data);
+      // Filter out tsx loader noise but keep real errors
+      const str = data.toString();
+      if (!str.includes('ExperimentalWarning')) {
+        hasError = true;
+        process.stderr.write(data);
+      }
     });
 
     currentProcess.on('error', (err) => {
