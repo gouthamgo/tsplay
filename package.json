@@ -15,6 +15,7 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsup",
+    "test": "node --test test/*.test.js",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
@@ -23,8 +24,16 @@
     "learning",
     "watch"
   ],
-  "author": "goutham",
+  "author": "gouthamgo",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gouthamgo/tsplay.git"
+  },
+  "bugs": {
+    "url": "https://github.com/gouthamgo/tsplay/issues"
+  },
+  "homepage": "https://github.com/gouthamgo/tsplay#readme",
   "engines": {
     "node": ">=18.0.0"
   },
