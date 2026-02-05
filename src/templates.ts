@@ -1,4 +1,6 @@
 import { writeFileSync } from 'fs';
+import { dirname } from 'path';
+import { existsSync, mkdirSync } from 'fs';
 
 const CODE = `// 🎮 TypeScript Playground
 const name: string = "TypeScript Learner";
@@ -13,5 +15,9 @@ console.log(greet("World"));
 `;
 
 export async function createExampleFile(filename: string): Promise<void> {
+  const dir = dirname(filename);
+  if (dir && dir !== '.' && !existsSync(dir)) {
+    mkdirSync(dir, { recursive: true });
+  }
   writeFileSync(filename, CODE, 'utf-8');
 }
