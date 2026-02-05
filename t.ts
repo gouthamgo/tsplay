@@ -1,5 +1,5 @@
 // 🎮 TypeScript Playground
-const name: string = "TypeScript Learner";
+const name: string = "Learner";
 console.log(`👋 Hello ${name}!`);
 
 interface Dev { name: string; skills: string[]; }
@@ -8,3 +8,6 @@ console.log(`💪 Skills: ${me.skills.join(", ")}`);
 
 function greet(n: string): string { return `Hello ${n}!`; }
 console.log(greet("World"));
+
+
+console.log(22);
