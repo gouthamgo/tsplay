@@ -36,7 +36,7 @@ When you run `tsplay` with a file that doesn't exist, it creates an example Type
 
 ```bash
 # Clone and install
-git clone <repo-url>
+git clone https://github.com/gouthamgo/tsplay.git
 cd tsplay
 npm install
 
@@ -45,6 +45,9 @@ npm run dev
 
 # Build for production
 npm run build
+
+# Run tests
+npm test
 
 # Local testing
 npm link
